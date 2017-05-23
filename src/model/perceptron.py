@@ -47,6 +47,8 @@ class Perceptron(Classifier):
         # Initialize the weight vector with small random values
         # around 0 and0.1
         self.weight = np.random.rand(self.trainingSet.input.shape[1])/100
+        self.bias = 0
+        self.use_bias = True
 
     def train(self, verbose=True):
         """Train the perceptron with the perceptron learning algorithm.
@@ -97,8 +99,9 @@ class Perceptron(Classifier):
         return list(map(self.classify, test))
 
     def updateWeights(self, input, error):
-        self.weight = self.weight + self.learningRate * error * input
+        self.bias += self.learningRate * error * self.use_bias
+        self.weight += self.learningRate * error * input
          
     def fire(self, input):
         """Fire the output of the perceptron corresponding to the input """
-        return Activation.sign(np.dot(np.array(input), self.weight))
+        return Activation.sign(np.dot(np.array(input), self.weight) + self.bias)
